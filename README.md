@@ -1,4 +1,5 @@
 # Indian_monsoon
+This repository contains the following data and script files used in Mitsui and Boers 2021.
 This repository will be completed soon after the corresponding paper is accepted. 
 
 - NCEP_Temperature.R
