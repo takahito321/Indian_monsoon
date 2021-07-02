@@ -1,6 +1,6 @@
 x<-read.table("69.dat")
 
-tab<-read.table("dTT_latest.txt") # read dTT from Pradhan et al. 2017
+tab<-read.table("dTT_latest.txt") 
 dTT<-tab[,1]
 year<-tab[,2]
 day<-tab[,3]

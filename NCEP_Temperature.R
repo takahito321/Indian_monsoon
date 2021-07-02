@@ -6,10 +6,9 @@ if(FALSE){
   for(i in 1:length(yy)){
       curl<-paste("ftp://ftp2.psl.noaa.gov/Datasets/ncep.reanalysis.dailyavgs/pressure/air.",yy[i],".nc",sep="")
       cdestfile<-paste("NCEP_Temperature/air.",yy[i],".nc",sep="")
-      download.file(curl,cdestfile,mode="wb") # note that if exsisting files are replaced by new files if mode="wb"
+      download.file(curl,cdestfile,mode="wb") # note that exsisting files are replaced by new files if mode="wb"
   }
 }
-
 
 # 3. Calculate the meridional temperature difference between the northern and southern boxes ###############################
 library(ncdf4) # install.packages("ncdf4") if you don't have  
@@ -28,8 +27,8 @@ x<-apply(u,4,mean)
 nc_close(ncin)
 
 # Calculate the meridional temperature difference between the northern and southern boxes ###############################
-# year 1948-2019
-yy<-1948:2019
+# year 1948-2020
+yy<-1948:2020
 xn<-numeric(0) # north box
 xs<-numeric(0) # south box
 day<-numeric(0)
@@ -47,19 +46,6 @@ for(i in 1:length(yy)){
     year<-c(year,rep(yy[i],length(t)))
     nc_close(ncin)
 }
-# year 2020. Since this program is made in the middle of 2020, we fill the rest of 2020 by dummy data  
-cdestfile<-paste("NCEP_Temperature/air.2020.nc",sep="")
-ncin <- nc_open(cdestfile)
-t<-ncvar_get(ncin,"time")
-u<-ncvar_get(ncin,"air", start=c(min(ix),min(iy),5,1), count=c(length(ix),length(iy),6,length(t))) # u[lon,lat,level,time]
-xn<-c(xn,apply(u[, 1:13,-5,],4,mean)) # -5 to remove 250-hpa level, lat[iy][1:13]=35-5N
-xs<-c(xs,apply(u[,13:21,-5,],4,mean)) # -5 to remove 250-hpa level, lat[iy][13:21]=5N-15S
-day<-c(day,1:366)
-year<-c(year,rep(2020,366))
-nt<-length(t)
-xn<-c(xn,xn[(nt+1):366])
-xs<-c(xs,xs[(nt+1):366])
-nc_close(ncin)
 
 # write the temperature difference xn-xs in the file named 'dTT_latest.txt'
 dat<- data.frame(xn-xs, year, day, xn, xs)
